@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-backend
+  namespace: nutrition
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-backend
+  template:
+    metadata:
+      labels:
+        app: flask-backend
+    spec:
+      containers:
+      - name: flask-backend
+        image: shaiva/nutrition-app-backend:latest
+        imagePullPolicy: Always
+        resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+        ports:
+        - containerPort: 5000
+        env:
+        - name: MONGO_URI
+          valueFrom:
+            secretKeyRef:
+              name: mongo-credentials
+              key: MONGO_URI
+        - name: BUCKET_NAME
+          valueFrom:
+              secretKeyRef:
+                name: aws-credentials
+                key: BUCKET_NAME
+        - name: REGION
+          valueFrom:
+              secretKeyRef:
+                name: aws-credentials
+                key: REGION
+        - name: BUCKET_URL
+          valueFrom:
+              secretKeyRef:
+                name: aws-credentials
+                key: BUCKET_URL
+        - name: AWS_ACCESS_KEY
+          valueFrom:
+              secretKeyRef:
+                name: aws-credentials
+                key: AWS_ACCESS_KEY
+        - name: AWS_SECRET_KEY
+          valueFrom:
+              secretKeyRef:
+                name: aws-credentials
+                key: AWS_SECRET_KEY
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 5000
+          initialDelaySeconds: 20
+          timeoutSeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /readiness
+            port: 5000
+          initialDelaySeconds: 20
+          timeoutSeconds: 5
+          periodSeconds: 5
+

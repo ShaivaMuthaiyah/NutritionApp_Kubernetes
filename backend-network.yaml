@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-nutrition-traffic
+  namespace: nutrition
+spec:
+  podSelector: {flask-backend}
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: nutrition
+    ports:
+    - protocol: TCP
+      port: 5000

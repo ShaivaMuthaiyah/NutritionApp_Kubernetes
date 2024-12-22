@@ -1,0 +1,46 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: flask-backend-ingress
+  namespace: nutrition
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: localhost
+      http:
+        paths:
+          - path: /calculate
+            pathType: Prefix
+            backend:
+              service:
+                name: flask-backend
+                port:
+                  number: 5000
+          - path: /api/download_report/
+            pathType: Prefix
+            backend:
+              service:
+                name: flask-backend
+                port:
+                  number: 5000
+          - path: /api/blogs
+            pathType: Prefix
+            backend:
+              service:
+                name: flask-backend
+                port:
+                  number: 5000
+          - path: /api/create_blog
+            pathType: Prefix
+            backend:
+              service:
+                name: flask-backend
+                port:
+                  number: 5000
+          - path: /create_blog
+            pathType: Prefix
+            backend:
+              service:
+                name: flask-backend
+                port:
+                  number: 5000

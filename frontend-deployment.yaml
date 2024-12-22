@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-frontend
+  namespace: nutrition
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: react-frontend
+  template:
+    metadata:
+      labels:
+        app: react-frontend
+    spec:
+      containers:
+        - name: react-frontend
+          image: shaiva/nutrition-app-front:latest
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 3000
+          env:
+            - name: REACT_APP_API_URL
+              value: "http://flask-backend.nutrition.svc.cluster.local/api/v1"
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: 3000
+          #   initialDelaySeconds: 5
+          #   periodSeconds: 10
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: 3000
+          #   initialDelaySeconds: 10
+          #   periodSeconds: 30

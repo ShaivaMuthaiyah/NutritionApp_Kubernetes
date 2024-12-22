@@ -28,35 +28,17 @@ spec:
         - containerPort: 5000
         env:
         - name: MONGO_URI
-          valueFrom:
-            secretKeyRef:
-              name: mongo-credentials
-              key: MONGO_URI
+          value: "${MONGO_URI}"
         - name: BUCKET_NAME
-          valueFrom:
-              secretKeyRef:
-                name: aws-credentials
-                key: BUCKET_NAME
+          value: "${BUCKET_NAME}"
         - name: REGION
-          valueFrom:
-              secretKeyRef:
-                name: aws-credentials
-                key: REGION
+          value: "ap-south-1"
         - name: BUCKET_URL
-          valueFrom:
-              secretKeyRef:
-                name: aws-credentials
-                key: BUCKET_URL
+          value: "${BUCKET_URL}"
         - name: AWS_ACCESS_KEY
-          valueFrom:
-              secretKeyRef:
-                name: aws-credentials
-                key: AWS_ACCESS_KEY
+          value: "${AWS_ACCESS_KEY}"
         - name: AWS_SECRET_KEY
-          valueFrom:
-              secretKeyRef:
-                name: aws-credentials
-                key: AWS_SECRET_KEY
+          value: "${AWS_SECRET_KEY}"
         livenessProbe:
           httpGet:
             path: /healthz

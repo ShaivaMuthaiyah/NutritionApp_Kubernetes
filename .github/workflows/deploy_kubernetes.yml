@@ -33,14 +33,17 @@ jobs:
 
     - name: Create Kubernetes Secret for Backend Environment Variables
       run: |
-        kubectl create secret generic aws-credentials \
-            --namespace nutrition \
-            --from-literal=MONGO_URI=${{ secrets.MONGO_URI }} \
-            --from-literal=BUCKET_NAME=${{ secrets.BUCKET_NAME }} \
-            --from-literal=BUCKET_URL=${{ secrets.BUCKET_URL }} \
-            --from-literal=AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }} \
-            --from-literal=AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }} \
-            --dry-run=client -o yaml | kubectl apply -f -
+            if ! kubectl get secret aws-credentials --namespace nutrition; then
+              kubectl create secret generic aws-credentials \
+                --namespace nutrition \
+                --from-literal=MONGO_URI=${{ secrets.MONGO_URI }} \
+                --from-literal=BUCKET_NAME=${{ secrets.BUCKET_NAME }} \
+                --from-literal=BUCKET_URL=${{ secrets.BUCKET_URL }} \
+                --from-literal=AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }} \
+                --from-literal=AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}
+            else
+              echo "Secret aws-credentials already exists."
+            fi
     
 
     - name: Apply Kubernetes Manifests

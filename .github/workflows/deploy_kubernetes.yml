@@ -40,7 +40,8 @@ jobs:
                 --from-literal=BUCKET_NAME=${{ secrets.BUCKET_NAME }} \
                 --from-literal=BUCKET_URL=${{ secrets.BUCKET_URL }} \
                 --from-literal=AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }} \
-                --from-literal=AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}
+                --from-literal=AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }} \
+                --dry-run=client -o yaml | kubectl apply -f -
             else
               echo "Secret aws-credentials already exists."
             fi

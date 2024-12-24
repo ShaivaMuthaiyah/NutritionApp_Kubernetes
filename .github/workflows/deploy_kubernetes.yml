@@ -19,17 +19,38 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
         aws-region: ${{ vars.DEFAULT_REGION }}
 
+    - name: Install eksctl
+      run: |
+        curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/0.117.0/eksctl_Linux_amd64.tar.gz" | tar xz -C /tmp
+        sudo mv /tmp/eksctl /usr/local/bin
+    
+
     - name: Install kubectl
       run: |
         curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
         chmod +x kubectl
         sudo mv kubectl /usr/local/bin/
 
+    - name: Install Helm
+      run: |
+        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+    
+    
+    - name: Verify Helm Installation
+      run: helm version
+
     - name: Update kubeconfig for EKS Cluster
       run: |
         aws eks update-kubeconfig \
           --name "nutrition" \
           --region ${{ vars.DEFAULT_REGION }}
+
+    - name: Fetch VPC ID dynamically
+      id: vpc_id_fetch
+      run: |
+        VPC_ID=$(aws ec2 describe-vpcs --filters Name=tag:Name,Values='main' \
+          --query 'Vpcs[0].VpcId' --output text)
+        echo "VPC_ID=$VPC_ID" >> $GITHUB_ENV
 
     - name: Update aws-auth ConfigMap
       run: |
@@ -68,6 +89,39 @@ jobs:
             
     - name: Verify Secret
       run: kubectl describe secret aws-credentials -n nutrition
+
+    - name: Create Custom IAM Policy
+      run: |
+        curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.11.0/docs/install/iam_policy.json
+        aws iam create-policy \
+        --policy-name AWSLoadBalancerControllerIAMPolicy \
+        --policy-document file://iam_policy.json
+    
+    - name: Create IAM Service Account
+      run: |
+        eksctl create iamserviceaccount \
+        --cluster=nutrition \
+        --namespace=kube-system \
+        --name=aws-load-balancer-controller \
+        --role-name AmazonEKSLoadBalancerControllerRole \
+        --attach-policy-arn=arn:aws:iam::${{ secrets.TERRAFORM_USER_ID }}:policy/AWSLoadBalancerControllerIAMPolicy \
+        --approve
+
+    - name: Deploy AWS Load Balancer Controller via Helm
+      run: |
+        helm repo add eks https://aws.github.io/eks-charts
+        helm repo update eks
+        helm upgrade -i aws-load-balancer-controller eks/aws-load-balancer-controller \
+          --namespace kube-system \
+          --set clusterName=nutrition \
+          --set region=${{ vars.DEFAULT_REGION }} \
+          --set vpcId=${{ env.VPC_ID }} \
+          --set serviceAccount.create=false \
+          --set serviceAccount.name=aws-load-balancer-controller
+    
+
+    - name: Apply AWS Load Balancer Controller Deployment
+      run: kubectl apply -f aws-load-balancer-controller.yaml
     
 
     - name: Apply Kubernetes Manifests

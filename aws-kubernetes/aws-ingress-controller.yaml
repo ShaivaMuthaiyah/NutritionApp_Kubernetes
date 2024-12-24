@@ -16,4 +16,8 @@ spec:
       serviceAccountName: aws-load-balancer-controller  # Links to IAM role
       containers:
         - name: controller
-          image: amazon/aws-alb-ingress-controller:latest
+          image: amazon/aws-alb-ingress-controller:v2.4.5
+          imagePullPolicy: Always
+          args:
+          - --cluster-name=nutrition
+          - --aws-region=ap-south-1

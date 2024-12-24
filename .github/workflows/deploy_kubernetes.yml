@@ -135,10 +135,6 @@ jobs:
           --set serviceAccount.name=aws-load-balancer-controller
     
 
-    # - name: Apply AWS Load Balancer Controller Deployment
-    #   run: kubectl apply -f aws-load-balancer-controller.yaml
-    
-
     - name: Apply Kubernetes Manifests
       run: |
         kubectl apply -f aws-kubernetes/

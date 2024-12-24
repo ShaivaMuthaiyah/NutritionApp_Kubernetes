@@ -17,7 +17,7 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-        aws-region: "ap-south-1"
+        aws-region: ${{ vars.DEFAULT_REGION }}
 
     - name: Install kubectl
       run: |
@@ -29,9 +29,21 @@ jobs:
       run: |
         aws eks update-kubeconfig \
           --name "nutrition" \
-          --region "ap-south-1"
+          --region ${{ vars.DEFAULT_REGION }}
 
-    - name: Create Kubernetes Secret from Temporary JSON
+    - name: Update aws-auth ConfigMap
+      run: |
+            kubectl patch configmap aws-auth -n kube-system --patch '{
+              "mapUsers": [
+                {
+                  "userarn": "${{ secrets.ROOT_ARN }}", # ARN from GitHub Secrets
+                  "username": "admin",
+                  "groups": ["system:masters"]
+                }
+              ]
+            }'
+
+    - name: Create Kubernetes Secret from Environment Variables
       env:
             MONGO_URI: ${{ secrets.MONGO_URI }}
             BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
@@ -39,28 +51,20 @@ jobs:
             AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
             AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
       run: |
-          # Create a temporary JSON file
-          echo '{
-              "MONGO_URI": "'$MONGO_URI'",
-              "BUCKET_NAME": "'$BUCKET_NAME'",
-              "BUCKET_URL": "'$BUCKET_URL'",
-              "AWS_ACCESS_KEY": "'$AWS_ACCESS_KEY'",
-              "AWS_SECRET_KEY": "'$AWS_SECRET_KEY'"
-          }' > temp-secret.json
-
-
-    - name: Create Kubernetes Secret for Backend Environment Variables
-      run: |
-            if ! kubectl get secret aws-credentials --namespace nutrition; then
-              kubectl create secret generic aws-credentials \
-            --namespace nutrition \
-            --from-file=temp-secret.json --dry-run=client -o yaml | kubectl apply -f -
-
-            # remove the temporary secret
-            rm temp-secret.json
-            else
-              echo "Secret aws-credentials already exists."
-            fi
+              # Check if the secret already exists
+              if ! kubectl get secret aws-credentials --namespace nutrition; then
+                # Create the secret with individual key-value pairs
+                kubectl create secret generic aws-credentials \
+                  --namespace nutrition \
+                  --from-literal=MONGO_URI="$MONGO_URI" \
+                  --from-literal=BUCKET_NAME="$BUCKET_NAME" \
+                  --from-literal=BUCKET_URL="$BUCKET_URL" \
+                  --from-literal=AWS_ACCESS_KEY="$AWS_ACCESS_KEY" \
+                  --from-literal=AWS_SECRET_KEY="$AWS_SECRET_KEY" \
+                  --dry-run=client -o yaml | kubectl apply -f -
+              else
+                echo "Secret aws-credentials already exists."
+              fi
             
     - name: Verify Secret
       run: kubectl describe secret aws-credentials -n nutrition

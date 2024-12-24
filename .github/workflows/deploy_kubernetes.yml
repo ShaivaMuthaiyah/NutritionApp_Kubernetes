@@ -1,4 +1,4 @@
-name: Deploy to EKS Manually
+name: Initial Kubernetes Setup with Deployment
 
 on:
   workflow_dispatch:  # Allows manual execution from GitHub UI

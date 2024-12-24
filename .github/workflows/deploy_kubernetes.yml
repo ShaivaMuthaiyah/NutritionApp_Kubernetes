@@ -19,10 +19,21 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
         aws-region: ${{ vars.DEFAULT_REGION }}
 
-    - name: Install eksctl
+    - name: Download eksctl
       run: |
-        curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/0.117.0/eksctl_Linux_amd64.tar.gz" | tar xz -C /tmp
-        sudo mv /tmp/eksctl /usr/local/bin
+        curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/0.117.0/eksctl_Linux_amd64.tar.gz" -o /tmp/eksctl.tar.gz
+      
+        # Verify that the file is a tar.gz
+        file /tmp/eksctl.tar.gz
+      
+        # Extract the file only if it's a tar.gz format
+        if [[ $(file -b /tmp/eksctl.tar.gz) == *"gzip compressed data"* ]]; then
+            tar xz -C /tmp -f /tmp/eksctl.tar.gz
+            sudo mv /tmp/eksctl /usr/local/bin
+        else
+            echo "Downloaded file is not a valid tar.gz archive."
+            exit 1
+        fi
     
 
     - name: Install kubectl

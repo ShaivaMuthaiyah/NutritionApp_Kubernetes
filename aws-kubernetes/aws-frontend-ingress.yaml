@@ -8,7 +8,7 @@ metadata:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":8080,"HTTPS": 443}]'
     alb.ingress.kubernetes.io/scheme: internet-facing
 spec:
-  ingressClassName: nginx
+  ingressClassName: alb
   rules:
     - host: "myapp.example.com"  # Update this to your domain or ELB DNS name
       http:

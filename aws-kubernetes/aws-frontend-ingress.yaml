@@ -5,13 +5,13 @@ metadata:
   namespace: nutrition
   annotations:
     kubernetes.io/ingress.class: alb
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":8080,"HTTPS": 443}]'
-    alb.ingress.kubernetes.io/target-type: instance
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":8080,"HTTPS": 443, {"HTTP": 80}}]'
+    alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/scheme: internet-facing
 spec:
   ingressClassName: alb
   rules:
-    - host: "myapp.example.com"  # Update this to your domain or ELB DNS name
+    - host: "" # Update this to your domain or ELB DNS name
       http:
         paths:
           - path: /

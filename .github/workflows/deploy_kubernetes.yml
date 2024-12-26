@@ -133,6 +133,7 @@ jobs:
         helm upgrade -i aws-load-balancer-controller eks/aws-load-balancer-controller \
           --namespace kube-system \
           --set clusterName=nutrition \
+          --set controller.leaderElection.enabled=true \
           --set region=${{ vars.DEFAULT_REGION }} \
           --set vpcId=${{ env.VPC_ID }} \
           --set serviceAccount.create=false \

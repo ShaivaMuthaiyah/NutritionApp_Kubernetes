@@ -133,6 +133,9 @@ jobs:
           --set vpcId=${{ env.VPC_ID }} \
           --set serviceAccount.create=false \
           --set serviceAccount.name=aws-load-balancer-controller
+        
+        kubectl -n kube-system rollout status deployment aws-load-balancer-controller
+        kubectl get deployment -n kube-system aws-load-balancer-controller
     
 
     - name: Apply Kubernetes Manifests

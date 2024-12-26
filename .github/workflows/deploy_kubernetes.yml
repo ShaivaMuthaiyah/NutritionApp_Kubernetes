@@ -131,7 +131,7 @@ jobs:
         helm repo add eks https://aws.github.io/eks-charts
         helm repo update eks
         helm upgrade -i aws-load-balancer-controller eks/aws-load-balancer-controller \
-          -namespace kube-system \
+          --namespace kube-system \
           --set clusterName=nutrition \
           --set controller.leaderElection.enabled=true \
           --set region=${{ vars.DEFAULT_REGION }} \

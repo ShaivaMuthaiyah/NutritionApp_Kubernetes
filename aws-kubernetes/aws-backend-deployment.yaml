@@ -3,15 +3,17 @@ kind: Deployment
 metadata:
   name: flask-backend
   namespace: nutrition
+  labels:
+    app.kubernetes.io/name: flask-backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: flask-backend
+      app.kubernetes.io/name: flask-backend
   template:
     metadata:
       labels:
-        app: flask-backend
+        app.kubernetes.io/name: flask-backend
     spec:
       containers:
       - name: flask-backend

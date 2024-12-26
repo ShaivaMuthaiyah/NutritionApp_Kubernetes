@@ -3,9 +3,11 @@ kind: Service
 metadata:
   name: react-frontend
   namespace: nutrition
+  labels:
+    app.kubernetes.io/name: react-frontend
 spec:
   selector:
-    app: react-frontend
+    app.kubernetes.io/name: react-frontend
   ports:
     - protocol: TCP
       port: 80

@@ -3,11 +3,13 @@ kind: Service
 metadata:
   name: flask-backend
   namespace: nutrition
+  labels:
+    app.kubernetes.io/name: flask-backend
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-internal: "true"
 spec:
   selector:
-    app: flask-backend
+    app.kubernetes.io/name: flask-backend
   ports:
     - protocol: TCP
       port: 5000

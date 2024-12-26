@@ -131,13 +131,18 @@ jobs:
         helm repo add eks https://aws.github.io/eks-charts
         helm repo update eks
         helm upgrade -i aws-load-balancer-controller eks/aws-load-balancer-controller \
-          --namespace kube-system \
+          -namespace kube-system \
           --set clusterName=nutrition \
           --set controller.leaderElection.enabled=true \
           --set region=${{ vars.DEFAULT_REGION }} \
           --set vpcId=${{ env.VPC_ID }} \
           --set serviceAccount.create=false \
-          --set serviceAccount.name=aws-load-balancer-controller
+          --set serviceAccount.name=aws-load-balancer-controller \
+          --set controller.ingressClass=alb \
+          --set controller.awsRegion=${{ vars.DEFAULT_REGION }} \
+          --set controller.vpcId=${{ env.VPC_ID }} \
+          --set controller.serviceAccount.create=false \
+          --set controller.serviceAccount.name=aws-load-balancer-controller
         
         kubectl -n kube-system rollout status deployment aws-load-balancer-controller
         kubectl get deployment -n kube-system aws-load-balancer-controller

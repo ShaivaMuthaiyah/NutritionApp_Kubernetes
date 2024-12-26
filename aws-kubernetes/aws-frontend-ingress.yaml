@@ -5,6 +5,7 @@ metadata:
   namespace: nutrition
   annotations:
     kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/load-balancer-name: react-frontend-ingress
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":8080,"HTTPS": 443, {"HTTP": 80}}]'
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/scheme: internet-facing

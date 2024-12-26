@@ -124,8 +124,7 @@ jobs:
 
     - name: Install Custom Resource Definitions (CRD)
       run: |
-        kubectl apply -k \
-        "github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master"
+        kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller/crds?ref=master"
 
     - name: Deploy AWS Load Balancer Controller via Helm
       run: |

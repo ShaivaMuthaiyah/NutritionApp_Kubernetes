@@ -122,6 +122,11 @@ jobs:
     #     --attach-policy-arn=arn:aws:iam::${{ secrets.TERRAFORM_USER_ID }}:policy/AWSLoadBalancerControllerIAMPolicy \
     #     --approve
 
+    - name: Install Custom Resource Definitions (CRD)
+      run: |
+        kubectl apply -k \
+        "github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master"
+
     - name: Deploy AWS Load Balancer Controller via Helm
       run: |
         helm repo add eks https://aws.github.io/eks-charts

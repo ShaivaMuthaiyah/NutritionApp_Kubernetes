@@ -9,12 +9,13 @@ metadata:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}, {"HTTPS":443}]'
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/certificate-arn: "${CERTIFICATE_ARN}"
     # alb.ingress.kubernetes.io/healthcheck-path: /healthz
 spec:
   ingressClassName: alb
   rules:
-    - host: "" # Update this to your domain or ELB DNS name
-      http:
+    # - host: "" 
+    - http:
         paths:
           - path: /
             pathType: Prefix

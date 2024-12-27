@@ -97,6 +97,7 @@ jobs:
                   --from-literal=BUCKET_URL="$BUCKET_URL" \
                   --from-literal=AWS_ACCESS_KEY="$AWS_ACCESS_KEY" \
                   --from-literal=AWS_SECRET_KEY="$AWS_SECRET_KEY" \
+                  --from-literal=CERTIFICATE_ARN="$CERTIFICATE_ARN" \
                   --dry-run=client -o yaml | kubectl apply -f -
               else
                 echo "Secret aws-credentials already exists."
@@ -147,6 +148,12 @@ jobs:
         kubectl -n kube-system rollout status deployment aws-load-balancer-controller
         kubectl get deployment -n kube-system aws-load-balancer-controller
     
+
+    - name: Replace placeholders with secrets
+      run: |
+        sed -i 's|${CERTIFICATE_ARN}|${{ secrets.CERTIFICATE_ARN }}|g' aws-kubernetes/aws-frontend-ingress.yaml
+  
+
 
     - name: Apply Kubernetes Manifests
       run: |

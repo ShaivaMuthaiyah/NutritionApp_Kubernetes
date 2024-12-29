@@ -106,22 +106,6 @@ jobs:
     - name: Verify Secret
       run: kubectl describe secret aws-credentials -n nutrition
 
-    # - name: Create Custom IAM Policy
-    #   run: |
-    #     curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.11.0/docs/install/iam_policy.json
-    #     aws iam create-policy \
-    #     --policy-name AWSLoadBalancerControllerIAMPolicy \
-    #     --policy-document file://iam_policy.json
-    
-    # - name: Create IAM Service Account
-    #   run: |
-    #     eksctl create iamserviceaccount \
-    #     --cluster=nutrition \
-    #     --namespace=kube-system \
-    #     --name=aws-load-balancer-controller \
-    #     --role-name AmazonEKSLoadBalancerControllerRole \
-    #     --attach-policy-arn=arn:aws:iam::${{ secrets.TERRAFORM_USER_ID }}:policy/AWSLoadBalancerControllerIAMPolicy \
-    #     --approve
 
     - name: Install Custom Resource Definitions (CRD)
       run: |

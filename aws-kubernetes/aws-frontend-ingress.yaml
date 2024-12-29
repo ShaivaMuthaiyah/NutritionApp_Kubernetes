@@ -20,10 +20,12 @@ spec:
           - path: /
             pathType: Prefix
             backend:
-              service:
-                name: react-frontend
-                port:
-                  number: 80
+              serviceName: react-frontend
+              servicePort: 80
+              # service:
+              #   name: react-frontend
+              #   port:
+              #     number: 80
 
 
 

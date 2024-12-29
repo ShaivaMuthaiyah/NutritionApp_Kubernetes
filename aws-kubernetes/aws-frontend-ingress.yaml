@@ -11,6 +11,7 @@ metadata:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/certificate-arn: "${CERTIFICATE_ARN}"
     alb.ingress.kubernetes.io/healthcheck-path: /healthz
+    alb.ingress.k8s.aws/healthcheck-port: "80"
 spec:
   ingressClassName: alb
   rules:

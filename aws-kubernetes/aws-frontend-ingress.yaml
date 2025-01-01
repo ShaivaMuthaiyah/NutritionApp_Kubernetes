@@ -18,6 +18,13 @@ spec:
     # - host: "" 
     - http:
         paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: flask-backend
+                port:
+                  number: 5000
           - path: /
             pathType: Prefix
             backend:

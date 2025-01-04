@@ -32,6 +32,8 @@ spec:
             secretKeyRef:
               name: mongo-credentials
               key: MONGO_URI
+        - name: REACT_APP_API_URL
+          value: "http://localhost:5000/api"
         - name: BUCKET_NAME
           valueFrom:
               secretKeyRef:

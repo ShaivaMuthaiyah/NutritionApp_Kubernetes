@@ -30,7 +30,7 @@ spec:
             - containerPort: 3000
           env:
             - name: REACT_APP_API_URL
-              value: "/api"
+              value: "http://flask-backend.nutrition.svc.cluster.local/api"
             - name: BUCKET_URL
               valueFrom:
                 secretKeyRef:

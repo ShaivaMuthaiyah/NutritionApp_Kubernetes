@@ -98,7 +98,7 @@ jobs:
                   --from-literal=AWS_ACCESS_KEY="$AWS_ACCESS_KEY" \
                   --from-literal=AWS_SECRET_KEY="$AWS_SECRET_KEY" \
                   --from-literal=CERTIFICATE_ARN="$CERTIFICATE_ARN" \
-                  --from-literal=CREACT_APP_API_URL="$REACT_APP_API_URL" \
+                  --from-literal=REACT_APP_API_URL="$REACT_APP_API_URL" \
                   --dry-run=client -o yaml | kubectl apply -f -
               else
                 echo "Secret aws-credentials already exists."

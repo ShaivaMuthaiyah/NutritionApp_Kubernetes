@@ -86,6 +86,7 @@ jobs:
             BUCKET_URL: ${{ secrets.BUCKET_URL }}
             AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
             AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+            CERTIFICATE_ARN: ${{ secrets.CERTIFICATE_ARN }}
       run: |
               # Check if the secret already exists
               if ! kubectl get secret aws-credentials --namespace nutrition; then

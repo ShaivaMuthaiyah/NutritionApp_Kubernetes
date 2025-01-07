@@ -72,6 +72,9 @@ jobs:
             helm repo add grafana https://grafana.github.io/helm-charts
             helm upgrade --install grafana grafana/grafana \
             --namespace monitoring --set adminPassword=admin \
+            --set persistence.enabled=true \
+            --set persistence.size=1Gi \
+            --set persistence.storageClassName=gp2 \
             --set "service.type=LoadBalancer"
 
 

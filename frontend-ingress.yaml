@@ -5,11 +5,12 @@ metadata:
   namespace: nutrition
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/enable-cors: "true"
 spec:
   ingressClassName: nginx
   rules:
-    # - host: "" 
-    - http:
+    - host: localhost
+      http:
         paths:
           - path: /api
             pathType: Prefix

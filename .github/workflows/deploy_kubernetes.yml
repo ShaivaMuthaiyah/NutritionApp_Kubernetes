@@ -139,12 +139,8 @@ jobs:
         helm repo add autoscaler https://kubernetes.github.io/autoscaler
         
         helm repo update
-        helm install cluster-autoscaler autoscaler/cluster-autoscaler-chart --namespace kube-system \
-          --set autoDiscovery.clusterName=nutrition \
-          --set cloudProvider=aws \
-          --set awsRegion=${{ vars.DEFAULT_REGION }}
+        helm install cluster-autoscaler autoscaler/cluster-autoscaler-chart --namespace kube-system
     
-
     - name: Replace placeholders with secrets
       run: |
         sed -i 's|${CERTIFICATE_ARN}|${{ secrets.CERTIFICATE_ARN }}|g' aws-kubernetes/aws-frontend-ingress.yaml

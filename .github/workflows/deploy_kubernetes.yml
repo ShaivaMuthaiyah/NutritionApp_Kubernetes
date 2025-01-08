@@ -139,7 +139,9 @@ jobs:
         helm repo add autoscaler https://kubernetes.github.io/autoscaler
         
         helm repo update
-        helm install cluster-autoscaler autoscaler/cluster-autoscaler-chart --namespace kube-system
+        helm install my-release autoscaler/cluster-autoscaler \
+        --set awsRegion=${{ vars.DEFAULT_REGION }} \
+        --set 'autoDiscovery.clusterName'=nutrition
     
     - name: Replace placeholders with secrets
       run: |

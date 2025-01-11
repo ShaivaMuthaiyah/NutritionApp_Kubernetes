@@ -67,17 +67,17 @@ jobs:
           --query 'Vpcs[0].VpcId' --output text)
         echo "VPC_ID=$VPC_ID" >> $GITHUB_ENV
 
-    - name: Update aws-auth ConfigMap
-      run: |
-            kubectl patch configmap aws-auth -n kube-system --patch '{
-              "mapUsers": [
-                {
-                  "userarn": "${{ secrets.ROOT_ARN }}", 
-                  "username": "admin",
-                  "groups": ["system:masters"]
-                }
-              ]
-            }'
+    # - name: Update aws-auth ConfigMap
+    #   run: |
+    #         kubectl patch configmap aws-auth -n kube-system --patch '{
+    #           "mapUsers": [
+    #             {
+    #               "userarn": "${{ secrets.ROOT_ARN }}", 
+    #               "username": "admin",
+    #               "groups": ["system:masters", "eks-admins"]
+    #             }
+    #           ]
+    #         }'
 
     - name: Create Kubernetes Secret from Environment Variables
       env:

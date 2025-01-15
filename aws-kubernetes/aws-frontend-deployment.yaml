@@ -6,7 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/name: react-frontend
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: react-frontend
@@ -29,11 +29,6 @@ spec:
           ports:
             - containerPort: 3000
           env:
-            # - name: REACT_APP_API_URL
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: aws-credentials
-            #       key: REACT_APP_API_URL
             - name: REACT_APP_BUCKET_URL
               valueFrom:
                 secretKeyRef:

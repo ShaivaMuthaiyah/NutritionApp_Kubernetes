@@ -4,7 +4,6 @@ metadata:
   name: react-frontend
   namespace: nutrition
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: react-frontend
